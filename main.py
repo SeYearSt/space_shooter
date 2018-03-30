@@ -8,9 +8,19 @@ pygame.display.set_caption("Hello, World!")
 
 screen = pygame.display.set_mode(SIZE)
 
+clock = pygame.time.Clock()
 
 #Game objects
+background = Background()
 player = Player()
+
+
+
+#Groups
+all_objects = pygame.sprite.Group()
+
+all_objects.add(background)
+all_objects.add(player)
 
 
 while True:
@@ -21,8 +31,10 @@ while True:
     
     screen.fill(BACKGROUND_COLOR)
     
-    player.update()
+    all_objects.update()
+
+    all_objects.draw(screen)
     
-    screen.blit(player.image,player.rect)
     
     pygame.display.flip()
+    clock.tick(30)
