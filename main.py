@@ -22,11 +22,22 @@ all_objects.add(background)
 all_objects.add(player)
 
 
+#Music
+
+#music = pygame.mixer.Sound(MUSIC_NAME)
+#music.play(-1)
+
+
 def main ():
     GAME_OVER = False
 
     pygame.init()
+    pygame.mixer.init()
+
     pygame.display.set_caption("Space shooter!")
+
+    pygame.mixer.music.load(MUSIC_NAME)
+    pygame.mixer.music.play(-1)
 
     screen = pygame.display.set_mode(SIZE)
 
@@ -57,6 +68,7 @@ def main ():
         bullets.draw(screen)
         if GAME_OVER:
             screen.blit(game_over.image,game_over.rect)
+
         pygame.display.flip()
 
         clock.tick(30)

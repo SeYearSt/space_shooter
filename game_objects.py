@@ -2,6 +2,7 @@ import pygame
 import random
 from settings import *
 
+pygame.mixer.init()
 
 class Player(pygame.sprite.Sprite):
     speed_x = 10
@@ -23,6 +24,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.bottom = HEIGHT - 10
         self.rect.centerx = WIDTH // 2
 
+        self.bullet_sound = pygame.mixer.Sound(BULLET_SOUND_NAME)
+        self.bullet_sound.set_volume(SOUND_VOLUME)
 
     def update(self):
         keys = pygame.key.get_pressed()
@@ -45,6 +48,9 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_SPACE] and self.current_shooting <=0:
             self.Bullets_group.add(Bullet(self.rect.centerx, self.rect.top))
+
+            self.bullet_sound.play()
+
             self.current_shooting = self.shooting_limit
         else:
             self.current_shooting -= self.clock.get_time()
