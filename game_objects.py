@@ -2,13 +2,27 @@ import pygame
 from settings import *
 
 class Plasmoid(pygame.sprite.Sprite):
-    
-    def __init__(self):
+    speed  = -15
+
+    def __init__(self,position):
         super(Plasmoid,self).__init__()
+
+        self.image = pygame.image.load("pictures/plasma.png")
+        self.rect = self.image.get_rect()
+
+        self.rect.midbottom = position
+
+
+    def update(self):
+        self.rect.move_ip((0,self.speed))
+
 
 class Player(pygame.sprite.Sprite):
     max_speed = 10
-    def __init__(self):
+    shooting_cool_down = 300
+    def __init__(self,clock,plasmoids):
+        self.plasmoids = plasmoids
+        self.clock = clock
         super(Player,self).__init__()
 
         self.image = pygame.image.load("pictures/player.png")
@@ -16,7 +30,7 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.centerx = WIDTH / 2
         self.rect.bottom = HEIGHT - 10
-
+        self.current_cool_down = 0
 
     def update(self):
         keys = pygame.key.get_pressed()
@@ -29,9 +43,18 @@ class Player(pygame.sprite.Sprite):
             self.current_speed = 0
 
         self.rect.move_ip((self.current_speed,0))
-                 
+        self.shoot()
+
+    def shoot(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE] and self.current_cool_down <= 0:
+            self.plasmoids.add(Plasmoid(self.rect.midtop))
+            self.current_cool_down = self.shooting_cool_down
+        else:
+            self.current_cool_down -= self.clock.get_time()
+
 class Background(pygame.sprite.Sprite):
-    
+
     def __init__(self):
         super(Background, self).__init__()
 
@@ -40,7 +63,7 @@ class Background(pygame.sprite.Sprite):
 
         self.rect.bottom = HEIGHT
 
-        
+
     def update(self):
         self.rect.bottom +=5
 
